@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Recommender System</title>
+    <link rel="stylesheet" href="../static/nav.css">
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<style>
+    .text-white{
+        color:white
+    }
+</style>
+<body style="background-color:#F3F2EF">
+
+    <nav class="navbar">
+        <a class="navbar-brand">BuK</a>
+        <div class="nav-left">
+            <ul class="nav-list">
+                <li><a href="/">Home</a></li>
+                <li><a href="/recommend">Recommend</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
+            <ul class="nav-list">
+                <li><a href="/shelf">Shelf</a></li>
+                <li><a href="#">User</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1 class="text-black" style="font-size:50px">For You</h1>
+            </div>
+            <div class="content">
+    <!-- Your content here -->
+                <form class="nav-search-form">
+                    <input type="text" class="form-control" placeholder="Search Books">
+                    <button type="submit" class="btn btn-primary mt-2">Search</button>
+                </form>
+            </div>
+
+
+            {% for i in range(book_name|length) %}
+                <div class="col-md-3" style="margin-top:50px">
+                    <div class="card">
+                        <div class="card-body">
+                            <img class="card-img-top" src="{{ image[i] }}">
+                            <p class="text-black">{{ book_name[i] }}</p>
+                            <h4 class="text-black">{{ author[i] }}</h4>
+                            <h4 class="text-black">Rating - {{ rating[i] }}</h4>
+                            <button class="btn btn-primary">+ Shelf</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+
+
+</body>
+</html>

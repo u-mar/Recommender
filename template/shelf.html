@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Ratings</title>
+    <link rel="stylesheet" href="../static/shelf.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            {% for i in range(5) %}
+                <div class="col-md-3" style="margin-top:50px">
+                    <div class="card">
+                        <div class="card-body">
+                            <img class="card-img-top" src="{{ image[i] }}">
+                            <p class="text-black">{{ book_name[i] }}</p>
+                            <h4 class="text-black">{{ author[i] }}</h4>
+                            <input type="number" class="ratingInput" min="1" max="5" step="0.1">
+                            <button class="btn btn-primary rateButton">Rate</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+    const bookCards = document.querySelectorAll('.card');
+    const ratingInputs = document.querySelectorAll('.ratingInput');
+    const rateButtons = document.querySelectorAll('.rateButton');
+    
+    let currentIndex = 0;
+
+    function rateBook(index, rating) {
+        // Here, you can save the rating for the book with index and rating
+        // You can use an API request to send the rating to the server
+        
+        // Move to the next book
+        currentIndex++;
+        if (currentIndex < bookCards.length) {
+            showBook(currentIndex);
+        } else {
+            // If all books are rated, you can display a completion message or redirect
+            alert("All books have been rated!");
+        }
+    }
+
+    function showBook(index) {
+        if (index < bookCards.length) {
+            bookCards.forEach(card => card.style.display = 'none');
+            const currentCard = bookCards[index];
+            currentCard.style.display = 'block';
+            
+            const rateButton = rateButtons[index];
+            rateButton.removeEventListener('click', rateButtonClickHandler); // Remove previous event listener if any
+            rateButton.addEventListener('click', rateButtonClickHandler);
+        }
+    }
+    
+    function rateButtonClickHandler() {
+        const index = currentIndex;
+        const rating = parseFloat(ratingInputs[index].value);
+        if (isNaN(rating) || rating < 1 || rating > 5) {
+            alert("Please enter a valid rating between 1 and 5.");
+            return;
+        }
+        rateBook(index, rating);
+    }
+
+    // Start by showing the first book
+    showBook(currentIndex);
+</script>
+
+
+
+</body>
+</html>
