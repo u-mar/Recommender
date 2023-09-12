@@ -3,66 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <title>Book Recommender System</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <link rel="stylesheet" href="../static/nav.css">
     <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <style>
-    .text-white{
-        color:black
+    .text-white {
+        color: black;
+    }
+
+    /* Improved styling for autocomplete suggestions */
+    .autocomplete-items {
+        border: 1px solid #d4d4d4;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .autocomplete-item {
+        padding: 10px;
+        background-color: #f1f1f1;
+        border-bottom: 1px solid #d4d4d4;
+        cursor: pointer;
+    }
+
+    .autocomplete-item:hover {
+        background-color: #e9e9e9;
     }
 </style>
 <body style="background-color:#F3F2EF">
 
-    <nav class="navbar">
-        <a class="navbar-brand">BuK</a>
-        <div class="nav-left">
-            <ul class="nav-list">
-                <li><a href="/">Home</a></li>
-                <li><a href="/recommend">Recommend</a></li>
-            </ul>
-        </div>
-        <div class="nav-right">
-            <ul class="nav-list">
-                <li><a href="#">Shelf</a></li>
-                <li><a href="#">User</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center" style="display: flex; flex-direction: column; align-items: center;">
-                <h1 class="text-white" style="font-size: 40px;">Recommend</h1>
-                <form action="/recommend_books" method="post">
-                    <input name="user_input" type="text" class="form-control"><br>
-                    <input type="submit" class="btn btn-lg btn-success">
-                </form>
-            </div>
-
-
-            {% if data %}
-
-             {% for i in data %}
-                <div class="col-md-3" style="margin-top:50px">
-                    <div class="card">
-                        <div class="card-body">
-                            <img class="card-img-top" src="{{i[2]}}">
-                            <p class="text-white">{{i[0]}}</p>
-                            <h4 class="text-white">{{i[1]}}</h4>
-                            <button class="btn btn-primary">+ Shelf</button>
-                        </div>
-                    </div>
-                </div>
-             {% endfor %}
-
-            {% endif %}
-
-
-
-
-        </div>
+<nav class="navbar">
+    <a class="navbar-brand">BuK</a>
+    <div class="nav-left">
+        <ul class="nav-list">
+            <li><a href="/">Home</a></li>
+            <li><a href="/recommend">Recommend</a></li>
+        </ul>
     </div>
+    <div class="nav-right">
+        <ul class="nav-list">
+            <li><a href="/shelf">Shelf</a></li>
+            <li><a href="#">User</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center" style="display: flex; flex-direction: column; align-items: center;">
+            <h1 class="text-white" style="font-size: 40px;">Recommend</h1>
+            <form action="/recommend_books" method="post">
+                <input type="text" id="tags"><br>
+                <input type="submit" class="btn btn-lg btn-success">
+            </form>
+        </div>
+
+        {% if data %}
+
+        {% for i in data %}
+        <div class="col-md-3" style="margin-top:50px">
+            <div class="card">
+                <div class="card-body">
+                    <img class="card-img-top" src="{{i[2]}}">
+                    <p class="text-white">{{i[0]}}</p>
+                    <h4 class="text-white">{{i[1]}}</h4>
+                    <button class="btn btn-primary">+ Shelf</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        {% endif %}
+    </div>
+</div>
+
+<script>
+  $(function() {
+    var auto = {{ auto|safe }}; // Assuming 'auto' is a JSON-encoded list
+    var debounceTimeout;
+    
+    $("#tags").autocomplete({
+      source: function(request, response) {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(function() {
+          var term = request.term.toLowerCase();
+          var suggestions = [];
+          
+          for (var i = 0; i < auto.length; i++) {
+            if (auto[i].toLowerCase().indexOf(term) !== -1) {
+              suggestions.push(auto[i]);
+            }
+            
+            if (suggestions.length >= 5) {
+              break; // Limit suggestions to 5
+            }
+          }
+          
+          response(suggestions);
+        }, 300); // Adjust the debounce delay as needed
+      }
+    });
+  });
+</script>
+
 
 </body>
 </html>

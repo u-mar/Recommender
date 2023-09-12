@@ -12,7 +12,7 @@
         color:white
     }
 </style>
-<body style="background-color:#F3F2EF">
+<body style="background-color:#000">
 
     <nav class="navbar">
         <a class="navbar-brand">BuK</a>
@@ -25,7 +25,7 @@
         <div class="nav-right">
             <ul class="nav-list">
                 <li><a href="/shelf">Shelf</a></li>
-                <li><a href="#">User</a></li>
+                <li><a href="/user">User</a></li>
             </ul>
         </div>
     </nav>
@@ -34,25 +34,16 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <h1 class="text-black" style="font-size:50px">For You</h1>
-            </div>
-            <div class="content">
-    <!-- Your content here -->
-                <form class="nav-search-form">
-                    <input type="text" class="form-control" placeholder="Search Books">
-                    <button type="submit" class="btn btn-primary mt-2">Search</button>
-                </form>
+                <button class="cluster-button">Clusters</button>
             </div>
 
 
-            {% for i in range(book_name|length) %}
+
+            {% for i in range(image|length) %}
                 <div class="col-md-3" style="margin-top:50px">
                     <div class="card">
                         <div class="card-body">
                             <img class="card-img-top" src="{{ image[i] }}">
-                            <p class="text-black">{{ book_name[i] }}</p>
-                            <h4 class="text-black">{{ author[i] }}</h4>
-                            <h4 class="text-black">Rating - {{ rating[i] }}</h4>
-                            <button class="btn btn-primary">+ Shelf</button>
                         </div>
                     </div>
                 </div>

@@ -1,33 +1,80 @@
-.card {
-    width: 500px; /* Adjust the width as needed */
-    height: 400px; /* Adjust the height as needed */
-    margin: 0 auto; /* Center the card horizontally */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    text-align: center;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
 }
 
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+
+
+.card {
+    max-width: 600px;
+    margin-left: 200px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    justify-content: center;
+    flex-direction: column-reverse;
+    display: flex;
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-5px);
+}
+
+
+.card h4 {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
 .card .card-body {
     padding: 40px;
 }
 
 .card img {
-    max-width: 100%;
+    max-width: 150%;
     height: auto;
-    width: auto;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
-.card .ratingInput {
-    margin: 10px auto;
-    width: 80%;
-    padding: 5px;
+.ratingInput {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
 }
 
-.card .rateButton {
-    width: 80%;
-    margin: 0 auto;
-    display: block;
+
+.rateButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
 }
+
+.rateButton:hover {
+    background-color: #0056b3;
+}
+
+.fa-star {
+    color: #ffc107;
+}
+
+.hidden {
+    display: none;
+}         
+
