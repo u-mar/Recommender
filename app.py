@@ -19,10 +19,10 @@ auto = json.dumps(auto)
 app = Flask(__name__,template_folder='template')
 app.secret_key = 'crazyyworld'
 
-DB_HOST = 'localhost'
-DB_NAME = 'bluesky'
-DB_USER = 'postgres'
-DB_PASSWORD = 'omar'
+DB_HOST = 'recommende-server.postgres.database.azure.com'
+DB_NAME = 'recommende-database'
+DB_USER = 'atypbgzfta'
+DB_PASSWORD = 'LR5M58112OAFE2G7$'
 
 class Database:
     def __init__(self):
