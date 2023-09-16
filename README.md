@@ -89,10 +89,10 @@ We rigorously evaluate the performance of our recommendation system using variou
 
 - **Personalization**: "We achieve a moderate level of personalization, with a personalization score of 0.05.".
 
-![coverage](images/coverage.png)
+![coverage](images/coverage.PNG)
 - **Coverage**: Our system achieves an impressive catalog coverage of 44%, offering a wide variety of movies to our users.
 
-![recall](images/recall.png)
+![recall](images/recall.PNG)
 - **MAR@K**: Our model achieves a lower MAR@K score, which can be influenced by the prevalence of popular items. While this may lead to seemingly strong performance, it may not fully reflect the model's ability to provide personalized and useful recommendations.
 
 
