@@ -8,7 +8,6 @@ import requests
 import psycopg2
 import pandas as pd
 import json
-from functools import wraps
 
 
 dataa = pickle.load(open('models/pop.pkl','rb'))
@@ -21,6 +20,7 @@ tmdbid_to_index = pickle.load(open('models/tmdbid_to_index.pkl','rb'))
 index_to_tmdbid = pickle.load(open('models/index_to_tmdbid.pkl','rb'))
 cosine = pickle.load(open('models/cosine.pkl','rb'))
 app = Flask(__name__,template_folder='template')
+
 app.secret_key = 'crazyyworld'
 DB_HOST = 'postgresmo.postgres.database.azure.com'
 DB_NAME = 'postgres'
