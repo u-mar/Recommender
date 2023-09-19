@@ -1,4 +1,5 @@
 from email.mime import image
+from os import name
 from flask import Flask,render_template,request,redirect,session
 import pickle
 import numpy as np
@@ -7,22 +8,37 @@ import requests
 import psycopg2
 import pandas as pd
 import json
+from functools import wraps
 
 
-dataa = pickle.load(open('pop.pkl','rb'))
+dataa = pickle.load(open('models/pop.pkl','rb'))
 
-monkey = pd.read_csv('real.csv')
+monkey = pd.read_csv('Data/real.csv')
+final = pd.read_csv('Data/df1.csv')
 auto = monkey['title'].unique().tolist()
 auto = json.dumps(auto)
-
-
+tmdbid_to_index = pickle.load(open('models/tmdbid_to_index.pkl','rb'))
+index_to_tmdbid = pickle.load(open('models/index_to_tmdbid.pkl','rb'))
+cosine = pickle.load(open('models/cosine.pkl','rb'))
 app = Flask(__name__,template_folder='template')
 app.secret_key = 'crazyyworld'
+DB_HOST = 'postgresmo.postgres.database.azure.com'
+DB_NAME = 'postgres'
+DB_USER = 'postgres@postgresmo'
+DB_PASSWORD = '0757197334Omar'
 
-DB_HOST = 'recommende-server.postgres.database.azure.com'
-DB_NAME = 'recommende-database'
-DB_USER = 'atypbgzfta'
-DB_PASSWORD = 'LR5M58112OAFE2G7$'
+
+def fetch(movie_id):
+    url = "https://api.themoviedb.org/3/movie/{}?api_key=5ef4f9a6c8f0a6fb8ccd12e5be032336&language=en-US".format(movie_id)
+    data = requests.get(url)
+    data = data.json()
+    if 'poster_path' in data:
+        poster_path = data['poster_path']
+        full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+        return full_path
+    else:
+        return 'https://image.tmdb.org/t/p/w500//fB0cGiEOngfsfyDHXIpFOmEwFgi.jpg'
+
 
 class Database:
     def __init__(self):
@@ -84,27 +100,15 @@ class Database:
 
 db = Database()
 
-
-def fetch_poster(movie_id):
-     url = "https://api.themoviedb.org/3/movie/{}?api_key=c7ec19ffdd3279641fb606d19ceb9bb1&language=en-US".format(movie_id)
-     data=requests.get(url)
-     data=data.json()
-     poster_path = data['poster_path']
-     full_path = "https://image.tmdb.org/t/p/w500/"+poster_path
-     return full_path
-
-def fetch(movie_id):
-    url = "https://api.themoviedb.org/3/movie/{}?api_key=5ef4f9a6c8f0a6fb8ccd12e5be032336&language=en-US".format(movie_id)
-    data = requests.get(url)
-    data = data.json()
-    if 'poster_path' in data:
-        poster_path = data['poster_path']
-        full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
-        return full_path
-    else:
-        return 'https://image.tmdb.org/t/p/w500//fB0cGiEOngfsfyDHXIpFOmEwFgi.jpg'
-
-
+def find_similar_movies(model,movie_name,data,tmdbid_to_index,index_to_tmdbid, num_recommendations=6):
+        mov_id = tmdbid_to_index.get(data[data['title'] == movie_name]['tmdbid'].values[0])
+        print(mov_id)
+        if mov_id is None:
+            return []  # Movie not found
+        distance = sorted(list(enumerate(model[mov_id])), reverse=True, key=lambda vector:vector[1])
+        movies_id =  [index_to_tmdbid.get(movie[0]) for movie in distance[1:num_recommendations+1]]
+        poster = [fetch(movie) for movie in movies_id]
+        return poster
 @app.route('/')
 def index():
     return render_template('index.html',
@@ -118,19 +122,8 @@ def recommend_ui():
 
 @app.route('/recommend_books',methods=['post'])
 def recommend():
-    index=df[df['title']==movie].index[0]
-    distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector:vector[1])
-    data = []
-    for i in distance[1:7]:
-        item = []
-        temp_df = books[books['Book-Title'] == pt.index[i[0]]]
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Title'].values))
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Book-Author'].values))
-        item.extend(list(temp_df.drop_duplicates('Book-Title')['Image-URL-M'].values))
-
-        data.append(item)
-
-
+    user_input = request.form.get('user_input')
+    data = find_similar_movies(cosine,user_input,final,tmdbid_to_index,index_to_tmdbid, num_recommendations=6)
     return render_template('recommend.html',data=data,auto=auto)
 
 
@@ -148,10 +141,10 @@ def shelf():
         for i in range(1):
             rating_name = f"user_input{i}"
             rating = request.form[rating_name]
+            print('moive',random_name[i],'rated',rating)
             db.rate(userId,rating,random_name[i],random_id[i])
-
-    for i in range(5):
-        images.append(fetch_poster(random_id[i]))
+    for j in range(5):
+        images.append(fetch(random_id[j]))
 
     return render_template('shelf.html',
                            image=images,

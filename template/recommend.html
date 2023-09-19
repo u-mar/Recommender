@@ -46,7 +46,7 @@
     </div>
     <div class="nav-right">
         <ul class="nav-list">
-            <li><a href="/shelf">Shelf</a></li>
+            <li><a href="/shelf">Rate</a></li>
             <li><a href="#">User</a></li>
         </ul>
     </div>
@@ -57,7 +57,7 @@
         <div class="col-md-12 text-center" style="display: flex; flex-direction: column; align-items: center;">
             <h1 class="text-white" style="font-size: 40px;">Recommend</h1>
             <form action="/recommend_books" method="post">
-                <input type="text" id="tags"><br>
+                <input name='user_input' type="text" id="tags"><br>
                 <input type="submit" class="btn btn-lg btn-success">
             </form>
         </div>
@@ -68,10 +68,7 @@
         <div class="col-md-3" style="margin-top:50px">
             <div class="card">
                 <div class="card-body">
-                    <img class="card-img-top" src="{{i[2]}}">
-                    <p class="text-white">{{i[0]}}</p>
-                    <h4 class="text-white">{{i[1]}}</h4>
-                    <button class="btn btn-primary">+ Shelf</button>
+                    <img class="card-img-top" src="{{i}}">
                 </div>
             </div>
         </div>
